@@ -18,6 +18,8 @@ module Crystalline::Containers
       end
     end
 
+    include Iterable(Pair(K, V))
+
     @alt_impl : RBTreeSet(Pair(K, V))
 
     def initialize
@@ -92,11 +94,16 @@ module Crystalline::Containers
     end
 
     private macro make_iterator(name, from, to)
-	def {{name}}
+	  def {{name}}
 			@alt_impl.{{name}} do |pair|
 				yield(pair.key, pair.value)
 			end
 		end
+
+    # return a iterator
+    def {{name}}
+      @alt_impl.{{name}}
+    end    
 	end
 
     make_iterator each, left, right

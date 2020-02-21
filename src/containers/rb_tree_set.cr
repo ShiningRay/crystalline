@@ -4,6 +4,7 @@ require "./common"
 module Crystalline::Containers
   class RBTreeSet(K)
     # include Enumerable
+    include Iterable(K)
 
     @root : Node(K)?
 
@@ -214,6 +215,36 @@ module Crystalline::Containers
         end
       end
     end
+
+    # Iterator for travasing
+    class Iterator_{{from}}_{{to}}(T)
+      include Iterator(T)
+
+      def initialize(root : Node(T) | Nil)
+        @node = root
+        @stack = Stack(Node(T)).new
+      end
+
+      def next
+        # In-order traversal (keys in ascending order)
+        node = @node
+        while !@stack.empty? || !node.nil?
+          if node
+            @stack.push(node)
+            node = node.{{from}}
+          else
+            if node = @stack.pop
+              @node = node.{{to}}
+              return node.key
+            end
+          end
+        end
+        stop
+      end
+    end    
+    def {{name}}
+      Iterator_{{from}}_{{to}}(K).new(@root)
+    end    
   end
 
     make_iterator each, left, right
