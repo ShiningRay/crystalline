@@ -51,7 +51,8 @@ module Crystalline::Containers
     end
 
     def get(key : K)
-      @alt_impl.get(Pair(K, V).new(key, nil)).value
+      obj = @alt_impl.get(Pair(K, V).new(key, nil))
+      obj.nil? ? nil : obj.value
     end
 
     def [](key : K)
